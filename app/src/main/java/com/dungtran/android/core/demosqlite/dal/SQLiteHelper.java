@@ -99,4 +99,52 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase st=getWritableDatabase();
         return st.delete("items",where,agrs);
     }
+
+//    public List<Item> searchItemBykey(String key){
+//        List<Item> list=new ArrayList<>();
+//        String sql="select t.id,t.name,t.price,t.date,c.id,c.name " +
+//                "from categories c inner join items t " +
+//                "on (c.id=t.cid) where t.name like ? or c.name like ?";
+//        String[] agrs={"%"+key+"%","%"+key+"%"};
+//        SQLiteDatabase st=getReadableDatabase();
+//        Cursor rs=st.rawQuery(sql,agrs);
+//        while(rs!=null && rs.moveToNext()){
+//            Category c=new Category(rs.getInt(4),rs.getString(5));
+//            list.add(new Item(rs.getInt(0),rs.getString(1),rs.getDouble(2),
+//                    rs.getString(3),c));
+//        }
+//        rs.close();
+//        return list;
+//    }
+//    public List<Item> getItemByfromPricetoPrice(double from,double to){
+//        List<Item> list=new ArrayList<>();
+//        String where="price between ? and ?";
+//        String[] agrs={Double.toString(from),Double.toString(to)};
+//        String orderby="price desc";
+//        SQLiteDatabase st=getReadableDatabase();
+//        Cursor rs=st.query("items",null,where,agrs,null,
+//                null,orderby);
+//        while(rs!=null && rs.moveToNext()){
+//            list.add( new Item(rs.getInt(0),rs.getString(1),rs.getDouble(3),
+//                    rs.getString(4),new Category(rs.getInt(2),"")));
+//
+//        }
+//        return list;
+//    }
+//    public List<Item> searchByKey(String key){
+//        List<Item> list=new ArrayList<>();
+//        String where="name like ? or date like ?";
+//        String[] agrs={"%"+key+"%","%"+key+"%"};
+//        String orderby="date desc";
+//        SQLiteDatabase st=getReadableDatabase();
+//        Cursor rs=st.query("items",null,where,agrs,null,
+//                null,orderby);
+//        while(rs!=null && rs.moveToNext()){
+//            list.add( new Item(rs.getInt(0),rs.getString(1),rs.getDouble(3),
+//                    rs.getString(4),new Category(rs.getInt(2),"")));
+//
+//        }
+//        return list;
+//    }
+
 }
