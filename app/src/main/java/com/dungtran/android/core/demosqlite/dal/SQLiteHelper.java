@@ -1,0 +1,102 @@
+package com.dungtran.android.core.demosqlite.dal;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import androidx.annotation.Nullable;
+
+import com.dungtran.android.core.demosqlite.model.Item;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SQLiteHelper extends SQLiteOpenHelper {
+
+    private final static String DATABASE_NAME="ChiTieu.db";
+    private final static int DATABASE_VERSION=1;
+    public SQLiteHelper(@Nullable Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        String sql="create table items(" +
+                "id integer primary key autoincrement," +
+                "title text, category text, price text, date text)";
+        db.execSQL(sql);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    public List<Item> getItems(){
+        List<Item> list=new ArrayList<>();
+        SQLiteDatabase st=getReadableDatabase();
+        String order = "date DESC";
+
+        Cursor rs=st.query("items",null, null, null, null, null, order);
+        while(rs!=null && rs.moveToNext()){
+            int id = rs.getInt(0);
+            String title = rs.getString(1);
+            String c = rs.getString(2);
+            String p = rs.getString(3);
+            String date = rs.getString(4);
+
+            list.add(new Item(id, title, c, p, date));
+        }
+        return list;
+    }
+
+    public long insertItem(Item t){
+        ContentValues values=new ContentValues();
+        values.put("title",t.getTitle());
+        values.put("category",t.getCategory());
+        values.put("price",t.getPrice());
+        values.put("date",t.getDate());
+        SQLiteDatabase st=getWritableDatabase();
+        return st.insert("items",null,values);
+    }
+
+    public List<Item> getByDate(String date){
+        List<Item> list=new ArrayList<>();
+        String whereClause = "date like ?";
+        String[] whereArgs = {date};
+        SQLiteDatabase st=getReadableDatabase();
+
+        Cursor rs = st.query("items",null, whereClause, whereArgs, null, null, null);
+
+        while(rs!=null && rs.moveToNext()){
+            int id = rs.getInt(0);
+            String title = rs.getString(1);
+            String c = rs.getString(2);
+            String p = rs.getString(3);
+
+            list.add(new Item(id, title, c, p, date));
+        }
+        return list;
+    }
+
+    public int updateItem(Item t){
+        ContentValues values=new ContentValues();
+        values.put("title",t.getTitle());
+        values.put("category",t.getCategory());
+        values.put("price",t.getPrice());
+        values.put("date",t.getDate());
+        String where="id=?";
+        String[] agrs={Integer.toString(t.getId())};
+        SQLiteDatabase st=getWritableDatabase();
+        return st.update("items",values,where,agrs);
+    }
+
+    public int deleteItem(int id){
+        String where="id=?";
+        String[] agrs={Integer.toString(id)};
+        SQLiteDatabase st=getWritableDatabase();
+        return st.delete("items",where,agrs);
+    }
+}
